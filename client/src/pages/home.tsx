@@ -336,7 +336,7 @@ export default function Home() {
               <Skull className="w-4 h-4 text-background" />
             </div>
             <div>
-              <span className="font-bold text-sm tracking-tight block leading-tight" data-testid="text-app-title">The Don't Work Here List</span>
+              <span className="font-bold text-sm tracking-tight block leading-tight" data-testid="text-app-title">Tech Company Layoffs</span>
               <span className="text-[10px] text-muted-foreground leading-none">updated daily</span>
             </div>
           </div>
@@ -483,7 +483,7 @@ export default function Home() {
         <footer className="mt-12 pt-6 border-t border-border flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Skull className="w-3.5 h-3.5 text-muted-foreground" />
-            <span className="text-[10px] text-muted-foreground">The Don't Work Here List</span>
+            <span className="text-[10px] text-muted-foreground">Tech Company Layoffs</span>
           </div>
           <p className="text-[10px] text-muted-foreground">Feb 2026</p>
         </footer>
