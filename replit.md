@@ -14,10 +14,9 @@ Three layoff eras:
 ## Architecture
 
 - **Frontend**: React + TypeScript + Vite + Tailwind CSS + Shadcn UI
-- **Backend**: Express.js API server
-- **Storage**: In-memory (MemStorage) — pre-seeded with 100 companies
+- **Backend**: Express.js API server (for local dev; not needed for Netlify deploy)
+- **Data**: Embedded in frontend via `shared/data.ts` — no API calls needed for static deploy
 - **Routing**: Wouter (client-side)
-- **State**: TanStack Query for data fetching
 - **Theme**: Dark/light mode with ThemeProvider, defaults to dark
 
 ## Key Features
@@ -48,7 +47,15 @@ server/
 
 shared/
   schema.ts              - Layoff and User types (Drizzle + Zod)
+  data.ts                - All 100 companies with layoff history (embedded in frontend at build time)
 ```
+
+## Netlify Deployment
+
+- Build command: `npx vite build`
+- Publish directory: `dist/public`
+- SPA redirects handled by `client/public/_redirects`
+- No server needed — all data is embedded in the frontend bundle
 
 ## API Endpoints
 

@@ -1,12 +1,14 @@
 import { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Sun, Moon, Search, TrendingDown, X, Zap, AlertTriangle, ArrowDown, ArrowUp, Minus, Skull, Flame, Users, Percent, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/components/theme-provider";
-import type { Layoff, LayoffRound } from "@shared/schema";
+import { LAYOFF_DATA, type LayoffData } from "@shared/data";
+import type { LayoffRound } from "@shared/schema";
+
+type Layoff = LayoffData;
 
 const TYPE_META: Record<string, { label: string; color: string; shortLabel: string }> = {
   "2026": {
@@ -327,9 +329,8 @@ export default function Home() {
   const [selectedLayoff, setSelectedLayoff] = useState<Layoff | null>(null);
   const [selectedRank, setSelectedRank] = useState(0);
 
-  const { data: layoffs = [], isLoading } = useQuery<Layoff[]>({
-    queryKey: ["/api/layoffs"],
-  });
+  const layoffs = LAYOFF_DATA;
+  const isLoading = false;
 
   const sorted = useMemo(() => {
     const items = [...layoffs];
