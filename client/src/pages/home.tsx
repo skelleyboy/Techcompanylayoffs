@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Sun, Moon, Search, TrendingDown, X, Zap, AlertTriangle, ArrowDown, ArrowUp, Minus, Skull, Flame, Users, Percent, Calendar } from "lucide-react";
+import { Sun, Moon, Search, TrendingDown, X, Zap, AlertTriangle, ArrowDown, ArrowUp, Minus, Skull, Flame, Users, Percent, Calendar, Briefcase, ExternalLink, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -201,120 +201,166 @@ function DetailModal({ layoff, rank, onClose }: { layoff: Layoff; rank: number; 
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-lg w-full rounded-2xl border border-card-border bg-card p-0 gap-0 overflow-hidden animate-in zoom-in-95 fade-in duration-300 flex flex-col max-h-[90vh]" data-testid="modal-layoff-detail">
-        <DialogHeader className="p-6 pb-0 flex-shrink-0">
-          <div className="flex items-start gap-4">
+      <DialogContent className="max-w-2xl w-[95vw] rounded-3xl border border-card-border bg-card p-0 gap-0 overflow-hidden animate-in zoom-in-95 fade-in duration-300 flex flex-col max-h-[90vh]" data-testid="modal-layoff-detail">
+        <DialogHeader className="p-6 sm:p-8 pb-4 flex-shrink-0 bg-muted/30 border-b border-border">
+          <div className="flex items-center gap-5">
             <div className="relative">
               <CompanyLogo logo={layoff.logo} company={layoff.company} />
-              <span className={`absolute -top-1.5 -left-1.5 w-6 h-6 rounded-lg text-[10px] font-black flex items-center justify-center ${rank <= 3 ? "bg-rose-500 text-white" : "bg-muted text-muted-foreground"}`}>
-                {rank}
+              <span className={`absolute -top-2 -left-2 w-7 h-7 rounded-xl text-[11px] font-black flex items-center justify-center shadow-lg ${rank <= 3 ? "bg-rose-500 text-white" : "bg-muted text-muted-foreground"}`}>
+                #{rank}
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <DialogTitle className="text-xl font-bold text-foreground leading-tight">{layoff.company}</DialogTitle>
-              <p className="text-sm text-muted-foreground mt-0.5">{layoff.industry}</p>
-              <div className="flex items-center gap-2 mt-2 flex-wrap">
-                <span className={`inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full border ${typeMeta.color}`}>
-                  {layoff.layoffType === "2026" && <Zap className="w-2.5 h-2.5" />}
-                  {typeMeta.label}
+              <div className="flex items-center gap-2 mb-1">
+                <DialogTitle className="text-2xl sm:text-3xl font-black text-foreground tracking-tight leading-none">{layoff.company}</DialogTitle>
+                <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border uppercase tracking-wider ${typeMeta.color}`}>
+                  {typeMeta.shortLabel}
                 </span>
-                <span className="text-xs text-muted-foreground">{formatDate(getLastLayoffDate(layoff))}</span>
+              </div>
+              <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                <span className="font-medium">{layoff.industry}</span>
+                <span className="w-1 h-1 rounded-full bg-border" />
+                <span>Last cut: {formatDate(getLastLayoffDate(layoff))}</span>
               </div>
             </div>
           </div>
         </DialogHeader>
 
-        <div className="p-6 pt-5 flex flex-col gap-5 overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40">
-          <div className="bg-background rounded-xl p-4 border border-border">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Danger score</span>
-              <span className={`text-2xl font-black ${level.color}`}>{score}</span>
-            </div>
-            <div className="h-2 bg-muted rounded-full overflow-hidden">
-              <div className={`h-full rounded-full ${level.barColor} transition-all duration-700`} style={{ width: `${score}%` }} />
-            </div>
-            <p className={`text-xs font-bold mt-2 ${level.color}`}>{level.label}</p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-background rounded-xl p-4 border border-border">
-              <p className="text-3xl font-bold text-foreground">{formatNumber(layoff.employeesCut)}</p>
-              <p className="text-xs text-muted-foreground mt-1">jobs eliminated</p>
-            </div>
-            {layoff.percentageCut != null && (
-              <div className="bg-background rounded-xl p-4 border border-border">
-                <p className="text-3xl font-bold text-foreground">{layoff.percentageCut}%</p>
-                <p className="text-xs text-muted-foreground mt-1">of workforce</p>
+        <div className="p-6 sm:p-8 pt-6 flex flex-col gap-8 overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40">
+          
+          {/* Main Stats Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Danger Score Card */}
+            <div className="bg-background/50 rounded-2xl p-5 border border-border flex flex-col justify-between group hover:border-rose-500/30 transition-colors duration-300">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
+                  <Flame className="w-3 h-3 text-rose-500" />
+                  Danger Index
+                </span>
+                <span className={`text-3xl font-black tabular-nums tracking-tighter ${level.color}`}>{score}</span>
               </div>
-            )}
-          </div>
-
-          {layoff.totalEmployeesBefore && (
-            <div className="flex items-center gap-3">
-              <div className="flex-1 bg-background rounded-xl p-3 border border-border text-center">
-                <p className="text-lg font-bold text-foreground">{formatNumber(layoff.totalEmployeesBefore)}</p>
-                <p className="text-[10px] text-muted-foreground">before</p>
-              </div>
-              <TrendingDown className="w-4 h-4 text-rose-400 flex-shrink-0" />
-              <div className="flex-1 bg-background rounded-xl p-3 border border-border text-center">
-                <p className="text-lg font-bold text-foreground">{formatNumber(Math.round(layoff.totalEmployeesBefore * (1 - (layoff.percentageCut || 0) / 100)))}</p>
-                <p className="text-[10px] text-muted-foreground">after</p>
+              <div className="space-y-2">
+                <div className="h-2.5 bg-muted rounded-full overflow-hidden">
+                  <div className={`h-full rounded-full ${level.barColor} transition-all duration-1000 ease-out`} style={{ width: `${score}%` }} />
+                </div>
+                <p className={`text-[11px] font-black uppercase tracking-widest ${level.color}`}>{level.label} Level Risk</p>
               </div>
             </div>
-          )}
 
-          <div>
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">What happened</p>
-            <p className="text-sm text-foreground leading-relaxed">{layoff.description}</p>
+            {/* Hiring Pulse Card (Solution for Job Seekers) */}
+            <div className="bg-background/50 rounded-2xl p-5 border border-border flex flex-col justify-between group hover:border-emerald-500/30 transition-colors duration-300">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
+                  <Briefcase className="w-3 h-3 text-emerald-500" />
+                  Hiring Pulse
+                </span>
+                {score > 70 ? (
+                  <span className="text-[10px] font-black bg-rose-500/10 text-rose-500 px-2 py-1 rounded-lg border border-rose-500/20 uppercase tracking-widest">Freeze</span>
+                ) : score > 45 ? (
+                  <span className="text-[10px] font-black bg-amber-500/10 text-amber-500 px-2 py-1 rounded-lg border border-amber-500/20 uppercase tracking-widest">Selective</span>
+                ) : (
+                  <span className="text-[10px] font-black bg-emerald-500/10 text-emerald-500 px-2 py-1 rounded-lg border border-emerald-500/20 uppercase tracking-widest">Active</span>
+                )}
+              </div>
+              <div className="space-y-3">
+                <p className="text-xs text-muted-foreground leading-snug">
+                  {score > 70 
+                    ? "Extreme caution. Recent deep cuts indicate a structural freeze. High risk of rescinded offers."
+                    : score > 45
+                    ? "Applying is okay, but expect intense scrutiny. They are likely only filling critical engineering roles."
+                    : "Stable outlook. Recent layoffs were surgical. Good time to reach out to recruiters."}
+                </p>
+                <Button variant="outline" size="sm" className="w-full rounded-xl text-[10px] font-bold uppercase tracking-widest gap-2 bg-background hover:bg-emerald-500 hover:text-white transition-all group/btn" asChild>
+                  <a href={`https://www.google.com/search?q=${encodeURIComponent(layoff.company + " careers")}`} target="_blank" rel="noopener noreferrer">
+                    Open Job Board <ExternalLink className="w-3 h-3 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                  </a>
+                </Button>
+              </div>
+            </div>
           </div>
 
-          {layoff.layoffHistory && layoff.layoffHistory.length > 0 && (
-            <div data-testid="section-layoff-timeline">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                Layoff timeline
-                <span className="ml-1.5 text-[10px] font-normal normal-case">({layoff.layoffHistory.length} {layoff.layoffHistory.length === 1 ? "round" : "rounds"})</span>
+          {/* Secondary Stats Row */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="bg-muted/30 rounded-2xl p-4 border border-border/50 text-center">
+              <p className="text-xl font-black text-foreground tracking-tight">{formatNumber(layoff.employeesCut)}</p>
+              <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Jobs Cut</p>
+            </div>
+            <div className="bg-muted/30 rounded-2xl p-4 border border-border/50 text-center">
+              <p className="text-xl font-black text-foreground tracking-tight">{layoff.percentageCut}%</p>
+              <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Force %</p>
+            </div>
+            <div className="bg-muted/30 rounded-2xl p-4 border border-border/50 text-center">
+              <p className="text-xl font-black text-foreground tracking-tight">{layoff.totalEmployeesBefore ? formatNumber(layoff.totalEmployeesBefore) : "—"}</p>
+              <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Before</p>
+            </div>
+            <div className="bg-muted/30 rounded-2xl p-4 border border-border/50 text-center">
+              <p className="text-xl font-black text-foreground tracking-tight">
+                {layoff.totalEmployeesBefore ? formatNumber(Math.round(layoff.totalEmployeesBefore * (1 - (layoff.percentageCut || 0) / 100))) : "—"}
               </p>
-              <div className="space-y-0">
-                {[...layoff.layoffHistory]
+              <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Remaining</p>
+            </div>
+          </div>
+
+          {/* Narrative Section */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+            <div className="sm:col-span-2 space-y-6">
+              <div>
+                <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
+                  <ShieldAlert className="w-3.5 h-3.5 text-rose-500" />
+                  The Breakdown
+                </h4>
+                <p className="text-sm text-foreground leading-relaxed font-medium">{layoff.description}</p>
+              </div>
+
+              {layoff.ceoQuote && (
+                <div className="relative pl-6 py-1 border-l-2 border-primary/20">
+                  <div className="absolute top-0 left-0 -translate-x-[1px] w-0.5 h-full bg-gradient-to-b from-primary to-transparent" />
+                  <h4 className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-2">CEO Receipt</h4>
+                  <blockquote className="text-sm text-foreground italic leading-relaxed">
+                    "{layoff.ceoQuote}"
+                  </blockquote>
+                </div>
+              )}
+            </div>
+
+            {/* Timeline Sidebar in Grid */}
+            <div className="space-y-4">
+              <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-4">Round History</h4>
+              <div className="space-y-4">
+                {layoff.layoffHistory && [...layoff.layoffHistory]
                   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                   .map((round, i) => (
-                    <div key={i} className="flex items-start gap-3 relative" data-testid={`timeline-round-${i}`}>
-                      <div className="flex flex-col items-center flex-shrink-0 pt-0.5">
-                        <div className={`w-2 h-2 rounded-full ${i === 0 ? "bg-rose-500" : "bg-muted-foreground/40"}`} />
-                        {i < layoff.layoffHistory!.length - 1 && <div className="w-px flex-1 bg-border min-h-[28px]" />}
+                    <div key={i} className="group/item flex gap-3">
+                      <div className="flex flex-col items-center pt-1.5">
+                        <div className={`w-2 h-2 rounded-full transition-transform group-hover/item:scale-125 ${i === 0 ? "bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]" : "bg-muted-foreground/30"}`} />
+                        {i < layoff.layoffHistory!.length - 1 && <div className="w-px h-full bg-border mt-2" />}
                       </div>
-                      <div className="pb-3 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className={`text-xs font-semibold tabular-nums ${i === 0 ? "text-foreground" : "text-muted-foreground"}`}>{formatDate(round.date)}</span>
-                          <span className={`text-xs font-bold ${i === 0 ? "text-rose-500 dark:text-rose-400" : "text-muted-foreground"}`}>{formatNumber(round.count)} cut</span>
-                        </div>
-                        {round.note && <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">{round.note}</p>}
+                      <div className="space-y-0.5 pb-2">
+                        <p className="text-[11px] font-bold text-foreground leading-none">{formatDate(round.date)}</p>
+                        <p className="text-[10px] font-black text-rose-500/80 uppercase tracking-tight">{formatNumber(round.count)} cut</p>
                       </div>
                     </div>
                   ))}
               </div>
             </div>
-          )}
+          </div>
 
-          {layoff.ceoQuote && (
-            <div className="bg-background border border-border rounded-xl p-4">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">What they said</p>
-              <blockquote className="text-sm text-foreground italic leading-relaxed">
-                "{layoff.ceoQuote}"
-              </blockquote>
-            </div>
-          )}
-
+          {/* Market Sentiment Footer */}
           {layoff.stockImpact && (
-            <div className="flex items-center gap-3 text-xs text-muted-foreground">
-              <StockIndicator impact={layoff.stockImpact} />
-              <span>
-                {layoff.stockImpact === "positive"
-                  ? "Stock went up after the announcement. Wall Street loved it."
-                  : layoff.stockImpact === "negative"
-                  ? "Stock dropped. Investors weren't convinced."
-                  : "Stock didn't move much either way."}
-              </span>
+            <div className="mt-4 p-4 rounded-2xl bg-muted/20 border border-border/50 flex items-center gap-4">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${layoff.stockImpact === "positive" ? "bg-emerald-500/10 text-emerald-500" : "bg-rose-500/10 text-rose-500"}`}>
+                <StockIndicator impact={layoff.stockImpact} />
+              </div>
+              <div>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-0.5">Market Reaction</p>
+                <p className="text-xs text-foreground font-medium">
+                  {layoff.stockImpact === "positive"
+                    ? "Wall Street rewarded the efficiency push. Stock trended up."
+                    : layoff.stockImpact === "negative"
+                    ? "Investors were spooked by the scale of cuts. Stock took a hit."
+                    : "The market remained neutral on the announcement."}
+                </p>
+              </div>
             </div>
           )}
         </div>
