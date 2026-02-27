@@ -281,22 +281,22 @@ function DetailView({ layoff, rank, onBack }: { layoff: Layoff; rank: number; on
         {/* Core Stats Grid */}
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-card border border-card-border rounded-2xl p-6">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-2">Jobs Cut</p>
             <p className="text-3xl font-black text-foreground tracking-tight tabular-nums">{formatNumber(layoff.employeesCut)}</p>
-            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-2">Jobs Cut</p>
           </div>
           <div className="bg-card border border-card-border rounded-2xl p-6">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-2">Force %</p>
             <p className="text-3xl font-black text-foreground tracking-tight tabular-nums">{layoff.percentageCut}%</p>
-            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-2">Force %</p>
           </div>
           <div className="bg-card border border-card-border rounded-2xl p-6">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-2">Before</p>
             <p className="text-3xl font-black text-foreground tracking-tight tabular-nums">{layoff.totalEmployeesBefore ? formatNumber(layoff.totalEmployeesBefore) : "—"}</p>
-            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-2">Before</p>
           </div>
           <div className="bg-card border border-card-border rounded-2xl p-6">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-2">Remaining</p>
             <p className="text-3xl font-black text-foreground tracking-tight tabular-nums">
               {layoff.totalEmployeesBefore ? formatNumber(Math.round(layoff.totalEmployeesBefore * (1 - (layoff.percentageCut || 0) / 100))) : "—"}
             </p>
-            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-2">Remaining</p>
           </div>
         </div>
 
