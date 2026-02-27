@@ -209,8 +209,8 @@ function DetailView({ layoff, rank, onBack }: { layoff: Layoff; rank: number; on
         <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Return</span>
       </button>
 
-      <div className="flex flex-col gap-12">
-        {/* Compact Header */}
+      <div className="flex flex-col gap-10">
+        {/* Minimal Header */}
         <div className="flex items-start gap-6">
           <div className="relative flex-shrink-0">
             <CompanyLogo logo={layoff.logo} company={layoff.company} />
@@ -233,157 +233,121 @@ function DetailView({ layoff, rank, onBack }: { layoff: Layoff; rank: number; on
           </div>
         </div>
 
-        {/* 3-Column Intel Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-10">
-          <div className="space-y-3">
+        {/* Danger Score Section */}
+        <div className="bg-card border border-card-border rounded-2xl p-8 space-y-6">
+          <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2">
               <Flame className="w-3.5 h-3.5 text-rose-500" />
-              Danger
+              Danger Index
             </span>
-            <div className="flex items-baseline gap-2">
-              <span className={`text-4xl font-black tabular-nums tracking-tighter ${level.color}`}>{score}</span>
-              <span className={`text-[9px] font-bold uppercase tracking-[0.1em] ${level.color}`}>{level.label}</span>
-            </div>
-            <div className="h-1 bg-muted rounded-full overflow-hidden">
-              <div className={`h-full rounded-full ${level.barColor} transition-all duration-1000 ease-out`} style={{ width: `${score}%` }} />
-            </div>
+            <span className={`text-6xl font-black tabular-nums tracking-tighter ${level.color}`}>{score}</span>
           </div>
+          <div className="h-2 bg-muted rounded-full overflow-hidden">
+            <div className={`h-full rounded-full ${level.barColor} transition-all duration-1000 ease-out`} style={{ width: `${score}%` }} />
+          </div>
+          <p className={`text-[11px] font-bold uppercase tracking-[0.2em] ${level.color}`}>{level.label} Level Risk</p>
+        </div>
 
-          <div className="space-y-3">
+        {/* Hiring Pulse Section */}
+        <div className="bg-card border border-card-border rounded-2xl p-8 space-y-6">
+          <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2">
               <Briefcase className="w-3.5 h-3.5 text-emerald-500" />
-              Hiring
+              Hiring Pulse
             </span>
-            <div>
-               <span className={`text-[10px] font-black px-1.5 py-0.5 rounded border uppercase tracking-widest ${
-                score > 70 ? "bg-rose-500/10 text-rose-500 border-rose-500/20" : 
-                score > 45 ? "bg-amber-500/10 text-amber-500 border-amber-500/20" : 
-                "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-              }`}>
-                {score > 70 ? "Freeze" : score > 45 ? "Selective" : "Active"}
-              </span>
-            </div>
-            <p className="text-[10px] text-muted-foreground leading-snug">
-              {score > 70 ? "New roles paused." : score > 45 ? "Intense scrutiny." : "Hiring normally."}
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2">
-              <ShieldAlert className="w-3.5 h-3.5 text-blue-500" />
-              Sponsor
+            <span className={`text-[10px] font-black px-3 py-1.5 rounded uppercase tracking-widest ${
+              score > 70 ? "bg-rose-500/10 text-rose-500 border border-rose-500/20" : 
+              score > 45 ? "bg-amber-500/10 text-amber-500 border border-amber-500/20" : 
+              "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
+            }`}>
+              {score > 70 ? "Freeze" : score > 45 ? "Selective" : "Active"}
             </span>
-            <div>
-               <span className={`text-[10px] font-black px-1.5 py-0.5 rounded border uppercase tracking-widest ${
-                score > 70 ? "bg-rose-500/10 text-rose-500 border-rose-500/20" : 
-                score > 45 ? "bg-amber-500/10 text-amber-500 border-amber-500/20" : 
-                "bg-blue-500/10 text-blue-500 border-blue-500/20"
-              }`}>
-                {score > 70 ? "No H1-B" : score > 45 ? "Transfers" : "Full"}
-              </span>
-            </div>
-            <p className="text-[10px] text-muted-foreground leading-snug">
-              {score > 70 ? "Sponsorship halted." : score > 45 ? "Case-by-case." : "Visa friendly."}
-            </p>
           </div>
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-lg">
+            {score > 70 
+              ? "Extreme caution. Recent deep cuts indicate a structural freeze. High risk of rescinded offers."
+              : score > 45
+              ? "Selective hiring. Intense scrutiny on non-critical roles. Expect slower response times."
+              : "Stable outlook. Surgical cuts finished. Good time to reach out to recruiters."}
+          </p>
+          <Button variant="outline" className="w-full rounded-xl h-14 font-bold uppercase tracking-[0.2em] text-[10px] gap-2 border-border/50" asChild>
+            <a href={`https://www.google.com/search?q=${encodeURIComponent(layoff.company + " careers")}`} target="_blank" rel="noopener noreferrer">
+              Open Job Board <ExternalLink className="w-4 h-4" />
+            </a>
+          </Button>
         </div>
 
-        {/* Core Stats Line */}
-        <div className="grid grid-cols-4 gap-4 py-8 border-y border-border/50">
-          <div>
-            <p className="text-2xl font-black text-foreground tracking-tight tabular-nums">{formatNumber(layoff.employeesCut)}</p>
-            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1">Jobs Cut</p>
+        {/* Core Stats Grid */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="bg-card border border-card-border rounded-2xl p-6">
+            <p className="text-3xl font-black text-foreground tracking-tight tabular-nums">{formatNumber(layoff.employeesCut)}</p>
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-2">Jobs Cut</p>
           </div>
-          <div>
-            <p className="text-2xl font-black text-foreground tracking-tight tabular-nums">{layoff.percentageCut}%</p>
-            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1">Force %</p>
+          <div className="bg-card border border-card-border rounded-2xl p-6">
+            <p className="text-3xl font-black text-foreground tracking-tight tabular-nums">{layoff.percentageCut}%</p>
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-2">Force %</p>
           </div>
-          <div>
-            <p className="text-2xl font-black text-foreground tracking-tight tabular-nums">{layoff.totalEmployeesBefore ? formatNumber(layoff.totalEmployeesBefore) : "—"}</p>
-            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1">Before</p>
+          <div className="bg-card border border-card-border rounded-2xl p-6">
+            <p className="text-3xl font-black text-foreground tracking-tight tabular-nums">{layoff.totalEmployeesBefore ? formatNumber(layoff.totalEmployeesBefore) : "—"}</p>
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-2">Before</p>
           </div>
-          <div>
-            <p className="text-2xl font-black text-foreground tracking-tight tabular-nums">
+          <div className="bg-card border border-card-border rounded-2xl p-6">
+            <p className="text-3xl font-black text-foreground tracking-tight tabular-nums">
               {layoff.totalEmployeesBefore ? formatNumber(Math.round(layoff.totalEmployeesBefore * (1 - (layoff.percentageCut || 0) / 100))) : "—"}
             </p>
-            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1">Left</p>
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-2">Remaining</p>
           </div>
         </div>
 
-        {/* New Feature: Interview Difficulty Pulse */}
-        <div className="space-y-6">
-          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Interview Intelligence</span>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-            <div className="bg-muted/20 rounded-xl p-4 border border-border/50">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 flex items-center gap-2">
-                <Zap className="w-3 h-3 text-amber-500" />
-                Difficulty Bump
-              </p>
-              <p className="text-sm font-medium">
-                {score > 60 ? "+40% harder. Hiring bar raised to extreme levels to justify headcount." : "Standard technical bar."}
-              </p>
-            </div>
-            <div className="bg-muted/20 rounded-xl p-4 border border-border/50">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 flex items-center gap-2">
-                <Users className="w-3 h-3 text-blue-500" />
-                Pipeline Load
-              </p>
-              <p className="text-sm font-medium">
-                {score > 50 ? "High candidate volume. Expect slower response times." : "Normal pipeline velocity."}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Severance Benchmark (Dense) */}
-        <div className="space-y-6">
+        {/* Severance Benchmark */}
+        <div className="bg-card border border-card-border rounded-2xl p-8 space-y-8">
           <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Severance & Benefits</h3>
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
             <div>
-              <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest mb-1">Package</p>
-              <p className="text-sm font-bold text-foreground">12-16 Weeks</p>
+              <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mb-1">Package</p>
+              <p className="text-sm font-bold text-foreground">12-16 Weeks Base</p>
             </div>
             <div>
-              <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest mb-1">Health</p>
-              <p className="text-sm font-bold text-foreground">COBRA (3 mo)</p>
+              <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mb-1">Health Coverage</p>
+              <p className="text-sm font-bold text-foreground">COBRA Paid (3 mo)</p>
             </div>
             <div>
-              <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest mb-1">Vesting</p>
-              <p className="text-sm font-bold text-foreground">6 mo Accel.</p>
+              <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mb-1">Vesting</p>
+              <p className="text-sm font-bold text-foreground">6 mo Acceleration</p>
             </div>
           </div>
         </div>
 
         {/* Breakdown & History */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-12">
-          <div className="sm:col-span-2 space-y-10">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 pt-8">
+          <div className="sm:col-span-2 space-y-12">
             <section>
-              <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-4">The Breakdown</h4>
-              <p className="text-base text-foreground/90 leading-relaxed font-medium">{layoff.description}</p>
+              <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-6">The Breakdown</h4>
+              <p className="text-lg text-foreground/90 leading-relaxed font-medium">{layoff.description}</p>
             </section>
 
             {layoff.ceoQuote && (
-              <section className="relative pl-8 border-l border-border">
-                <blockquote className="text-lg text-foreground italic leading-relaxed tracking-tight">
+              <section className="relative pl-10 border-l border-border">
+                <blockquote className="text-xl text-foreground italic leading-relaxed tracking-tight">
                   "{layoff.ceoQuote}"
                 </blockquote>
               </section>
             )}
           </div>
 
-          <aside className="space-y-6">
+          <aside className="space-y-8">
             <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">History</h4>
-            <div className="space-y-6">
+            <div className="space-y-8">
               {layoff.layoffHistory && [...layoff.layoffHistory]
                 .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                 .map((round, i) => (
                   <div key={i} className="flex gap-4">
                     <div className="flex flex-col items-center pt-1.5">
-                      <div className={`w-1.5 h-1.5 rounded-full ${i === 0 ? "bg-rose-500" : "bg-muted-foreground/30"}`} />
-                      {i < layoff.layoffHistory!.length - 1 && <div className="w-px h-full bg-border mt-2.5" />}
+                      <div className={`w-2 h-2 rounded-full ${i === 0 ? "bg-rose-500" : "bg-muted-foreground/30"}`} />
+                      {i < layoff.layoffHistory!.length - 1 && <div className="w-px h-full bg-border mt-3" />}
                     </div>
-                    <div className="space-y-0.5 pb-1">
-                      <p className="text-[11px] font-bold text-foreground leading-none">{formatDate(round.date)}</p>
+                    <div className="space-y-1 pb-2">
+                      <p className="text-xs font-bold text-foreground leading-none">{formatDate(round.date)}</p>
                       <p className="text-[10px] font-black text-rose-500/80 uppercase tracking-widest">{formatNumber(round.count)} cut</p>
                     </div>
                   </div>
@@ -392,15 +356,10 @@ function DetailView({ layoff, rank, onBack }: { layoff: Layoff; rank: number; on
           </aside>
         </div>
 
-        {/* Viral Share / Apply Action */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Button className="flex-1 rounded-xl h-12 font-bold uppercase tracking-[0.2em] text-[10px] gap-2" asChild>
-             <a href={`https://www.google.com/search?q=${encodeURIComponent(layoff.company + " careers")}`} target="_blank" rel="noopener noreferrer">
-              View Open Roles <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          </Button>
-          <Button variant="outline" className="flex-1 rounded-xl h-12 font-bold uppercase tracking-[0.2em] text-[10px] gap-2 border-border/50">
-            Share Data <X className="w-3.5 h-3.5" />
+        {/* Viral Share Action */}
+        <div className="pt-8">
+          <Button variant="outline" className="w-full rounded-xl h-14 font-bold uppercase tracking-[0.2em] text-[10px] gap-2 border-border/50">
+            Share Data <X className="w-4 h-4" />
           </Button>
         </div>
       </div>
