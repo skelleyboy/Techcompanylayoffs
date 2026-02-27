@@ -1,12 +1,12 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Sun, Moon, Search, TrendingDown, X, Zap, AlertTriangle, ArrowDown, ArrowUp, Minus, Skull, Flame, Users, Percent } from "lucide-react";
+import { Sun, Moon, Search, TrendingDown, X, Zap, AlertTriangle, ArrowDown, ArrowUp, Minus, Skull, Flame, Users, Percent, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/components/theme-provider";
-import type { Layoff } from "@shared/schema";
+import type { Layoff, LayoffRound } from "@shared/schema";
 
 const TYPE_META: Record<string, { label: string; color: string; shortLabel: string }> = {
   "2026": {
@@ -73,6 +73,12 @@ function formatNumber(n: number): string {
   if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
   if (n >= 1000) return `${(n / 1000).toFixed(1)}K`;
   return n.toString();
+}
+
+function getLastLayoffDate(layoff: Layoff): string {
+  if (!layoff.layoffHistory || layoff.layoffHistory.length === 0) return layoff.date;
+  const sorted = [...layoff.layoffHistory].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return sorted[0].date;
 }
 
 function formatDate(d: string): string {
@@ -149,7 +155,13 @@ function LeaderboardRow({ layoff, rank, onClick }: { layoff: Layoff; rank: numbe
               </>
             )}
             <span className="text-border hidden sm:inline">|</span>
-            <span className="hidden sm:inline">{formatDate(layoff.date)}</span>
+            <span className="hidden sm:inline" data-testid={`text-last-date-${layoff.id}`}>{formatDate(getLastLayoffDate(layoff))}</span>
+            {(layoff.layoffHistory?.length ?? 0) > 1 && (
+              <>
+                <span className="text-border hidden sm:inline">|</span>
+                <span className="hidden sm:inline text-[10px] text-muted-foreground" data-testid={`text-rounds-${layoff.id}`}>{layoff.layoffHistory!.length} rounds</span>
+              </>
+            )}
           </div>
         </div>
 
@@ -203,7 +215,7 @@ function DetailModal({ layoff, rank, onClose }: { layoff: Layoff; rank: number; 
                   {layoff.layoffType === "2026" && <Zap className="w-2.5 h-2.5" />}
                   {typeMeta.label}
                 </span>
-                <span className="text-xs text-muted-foreground">{formatDate(layoff.date)}</span>
+                <span className="text-xs text-muted-foreground">{formatDate(getLastLayoffDate(layoff))}</span>
               </div>
             </div>
           </div>
@@ -253,6 +265,34 @@ function DetailModal({ layoff, rank, onClose }: { layoff: Layoff; rank: number; 
             <p className="text-sm text-foreground leading-relaxed">{layoff.description}</p>
           </div>
 
+          {layoff.layoffHistory && layoff.layoffHistory.length > 0 && (
+            <div data-testid="section-layoff-timeline">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                Layoff timeline
+                <span className="ml-1.5 text-[10px] font-normal normal-case">({layoff.layoffHistory.length} {layoff.layoffHistory.length === 1 ? "round" : "rounds"})</span>
+              </p>
+              <div className="space-y-0">
+                {[...layoff.layoffHistory]
+                  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                  .map((round, i) => (
+                    <div key={i} className="flex items-start gap-3 relative" data-testid={`timeline-round-${i}`}>
+                      <div className="flex flex-col items-center flex-shrink-0 pt-0.5">
+                        <div className={`w-2 h-2 rounded-full ${i === 0 ? "bg-rose-500" : "bg-muted-foreground/40"}`} />
+                        {i < layoff.layoffHistory!.length - 1 && <div className="w-px flex-1 bg-border min-h-[28px]" />}
+                      </div>
+                      <div className="pb-3 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className={`text-xs font-semibold tabular-nums ${i === 0 ? "text-foreground" : "text-muted-foreground"}`}>{formatDate(round.date)}</span>
+                          <span className={`text-xs font-bold ${i === 0 ? "text-rose-500 dark:text-rose-400" : "text-muted-foreground"}`}>{formatNumber(round.count)} cut</span>
+                        </div>
+                        {round.note && <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">{round.note}</p>}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
+
           {layoff.ceoQuote && (
             <div className="bg-background border border-border rounded-xl p-4">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">What they said</p>
@@ -301,7 +341,7 @@ export default function Home() {
       case "percentage":
         return items.sort((a, b) => (b.percentageCut || 0) - (a.percentageCut || 0));
       case "recent":
-        return items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        return items.sort((a, b) => new Date(getLastLayoffDate(b)).getTime() - new Date(getLastLayoffDate(a)).getTime());
       default:
         return items;
     }

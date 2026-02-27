@@ -1,6 +1,14 @@
-import { pgTable, text, integer, real, timestamp, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, real, varchar, json } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+
+export const layoffRoundSchema = z.object({
+  date: z.string(),
+  count: z.number(),
+  note: z.string().optional(),
+});
+
+export type LayoffRound = z.infer<typeof layoffRoundSchema>;
 
 export const layoffs = pgTable("layoffs", {
   id: varchar("id").primaryKey(),
@@ -17,6 +25,7 @@ export const layoffs = pgTable("layoffs", {
   date: text("date").notNull(),
   ceoQuote: text("ceo_quote"),
   sourceUrl: text("source_url"),
+  layoffHistory: json("layoff_history").$type<LayoffRound[]>(),
 });
 
 export const insertLayoffSchema = createInsertSchema(layoffs).omit({ id: true });

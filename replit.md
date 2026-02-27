@@ -15,7 +15,7 @@ Three layoff eras:
 
 - **Frontend**: React + TypeScript + Vite + Tailwind CSS + Shadcn UI
 - **Backend**: Express.js API server
-- **Storage**: In-memory (MemStorage) — pre-seeded with 11 companies
+- **Storage**: In-memory (MemStorage) — pre-seeded with 100 companies
 - **Routing**: Wouter (client-side)
 - **State**: TanStack Query for data fetching
 - **Theme**: Dark/light mode with ThemeProvider, defaults to dark
@@ -25,7 +25,7 @@ Three layoff eras:
 - Ranked leaderboard with danger scores (0-100)
 - Sort by: danger score, % cut, total headcount, most recent
 - Search by company name, industry, or trigger
-- Detail modal with full breakdown: employee counts, CEO quotes, stock impact
+- Detail modal with full breakdown: employee counts, layoff timeline, CEO quotes, stock impact
 - Ticker strip stats: total jobs gone, companies, worst offender
 - Legend explaining layoff types and scoring
 - Mobile-first responsive design
@@ -43,7 +43,7 @@ client/src/
 
 server/
   routes.ts              - GET /api/layoffs, GET /api/layoffs/:id, POST /api/layoffs
-  storage.ts             - MemStorage with seed data for 11 companies
+  storage.ts             - MemStorage with seed data for 100 companies + layoff history
   index.ts               - Express server entry
 
 shared/
@@ -58,7 +58,7 @@ shared/
 
 ## Seeded Data
 
-11 companies: Block, Amazon, Microsoft, Google, Meta, Intel, Salesforce, Cisco, Spotify, Unity, Tesla
+100 companies with layoff history (multiple rounds per company where applicable). Each company includes a `layoffHistory` field — an array of `{date, count, note?}` objects representing individual layoff rounds. Schema exports `LayoffRound` type.
 
 ## Design Notes
 
