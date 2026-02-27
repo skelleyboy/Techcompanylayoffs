@@ -130,9 +130,10 @@ function LeaderboardRow({ layoff, rank, onClick }: { layoff: Layoff; rank: numbe
     <button
       data-testid={`row-layoff-${layoff.id}`}
       onClick={onClick}
-      className="w-full text-left group"
+      className="w-full text-left group animate-in fade-in slide-in-from-bottom-2 duration-500 fill-mode-both"
+      style={{ animationDelay: `${Math.min(rank * 30, 600)}ms` }}
     >
-      <div className="flex items-center gap-3 sm:gap-4 px-3 sm:px-5 py-3.5 hover-elevate rounded-xl transition-all duration-150 flex-wrap">
+      <div className="flex items-center gap-3 sm:gap-4 px-3 sm:px-5 py-3.5 hover-elevate rounded-xl transition-all duration-200 flex-wrap active:scale-[0.98]">
         <span data-testid={`text-rank-${rank}`} className={`text-lg sm:text-xl font-black tabular-nums w-7 sm:w-8 text-center flex-shrink-0 ${rank <= 3 ? level.color : "text-muted-foreground"}`}>
           {rank}
         </span>
@@ -200,7 +201,7 @@ function DetailModal({ layoff, rank, onClose }: { layoff: Layoff; rank: number; 
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-lg w-full rounded-2xl border border-card-border bg-card p-0 gap-0 overflow-hidden" data-testid="modal-layoff-detail">
+      <DialogContent className="max-w-lg w-full rounded-2xl border border-card-border bg-card p-0 gap-0 overflow-hidden animate-in zoom-in-95 fade-in duration-300" data-testid="modal-layoff-detail">
         <DialogHeader className="p-6 pb-0">
           <div className="flex items-start gap-4">
             <div className="relative">
@@ -371,7 +372,7 @@ export default function Home() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
 
         {/* Header */}
-        <header className="flex items-center justify-between gap-3 mb-8">
+        <header className="flex items-center justify-between gap-3 mb-8 animate-in fade-in slide-in-from-top-4 duration-700">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
               <Skull className="w-4 h-4 text-background" />
@@ -393,7 +394,7 @@ export default function Home() {
         </header>
 
         {/* Ticker Strip */}
-        <div className="flex items-center gap-4 sm:gap-6 mb-8 pb-6 border-b border-border overflow-x-auto" data-testid="section-stats">
+        <div className="flex items-center gap-4 sm:gap-6 mb-8 pb-6 border-b border-border overflow-x-auto animate-in fade-in slide-in-from-left-4 duration-700 delay-150 fill-mode-both" data-testid="section-stats">
           <div className="flex-shrink-0">
             <p data-testid="text-total-jobs" className="text-2xl sm:text-3xl font-black text-foreground tracking-tight tabular-nums">{isLoading ? "..." : formatNumber(totalCut)}</p>
             <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-0.5">jobs gone</p>
