@@ -47,14 +47,15 @@ const LOGO_INITIALS: Record<string, string> = {
   intel: "I", salesforce: "SF", cisco: "C", spotify: "S", unity: "U", tesla: "T",
 };
 
-type SortKey = "danger" | "headcount" | "percentage" | "recent" | "rounds";
+type SortKey = "danger" | "headcount" | "percentage" | "recent" | "rounds" | "least_rounds";
 
 const SORT_OPTIONS: { value: SortKey; label: string; icon: typeof Skull }[] = [
   { value: "danger", label: "Danger score", icon: Flame },
   { value: "percentage", label: "% workforce cut", icon: Percent },
   { value: "headcount", label: "Total jobs cut", icon: Users },
   { value: "recent", label: "Most recent", icon: TrendingDown },
-  { value: "rounds", label: "Total rounds", icon: Calendar },
+  { value: "rounds", label: "Most rounds", icon: Calendar },
+  { value: "least_rounds", label: "Least rounds", icon: ArrowUp },
 ];
 
 function getDangerScore(l: Layoff): number {
@@ -200,6 +201,29 @@ function DetailView({ layoff, rank, onBack }: { layoff: Layoff; rank: number; on
   const score = getDangerScore(layoff);
   const level = getDangerLevel(score);
   const typeMeta = TYPE_META[layoff.layoffType];
+
+  const handleShare = async () => {
+    const shareData = {
+      title: `${layoff.company} Layoff Data | Tech Company Layoffs`,
+      text: `Check out the layoff data for ${layoff.company}. Danger Index: ${score}.`,
+      url: window.location.href,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.error("Error sharing:", err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        alert("Link copied to clipboard!");
+      } catch (err) {
+        console.error("Error copying to clipboard:", err);
+      }
+    }
+  };
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both max-w-2xl mx-auto">
@@ -360,7 +384,11 @@ function DetailView({ layoff, rank, onBack }: { layoff: Layoff; rank: number; on
 
         {/* Viral Share Action */}
         <div className="pt-8">
-          <Button variant="outline" className="w-full rounded-xl h-14 font-bold uppercase tracking-[0.2em] text-[10px] gap-2 border-border/50">
+          <Button 
+            variant="outline" 
+            className="w-full rounded-xl h-14 font-bold uppercase tracking-[0.2em] text-[10px] gap-2 border-border/50"
+            onClick={handleShare}
+          >
             Share Data <X className="w-4 h-4" />
           </Button>
         </div>
@@ -392,6 +420,8 @@ export default function Home() {
         return items.sort((a, b) => new Date(getLastLayoffDate(b)).getTime() - new Date(getLastLayoffDate(a)).getTime());
       case "rounds":
         return items.sort((a, b) => (b.layoffHistory?.length || 0) - (a.layoffHistory?.length || 0));
+      case "least_rounds":
+        return items.sort((a, b) => (a.layoffHistory?.length || 0) - (b.layoffHistory?.length || 0));
       default:
         return items;
     }
