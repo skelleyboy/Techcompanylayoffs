@@ -159,6 +159,7 @@ function LeaderboardRow({ layoff, rank, onClick }: { layoff: Layoff; rank: numbe
               </>
             )}
             <span className="text-border">|</span>
+            <span className="text-[10px] uppercase tracking-wider font-semibold opacity-70">Last cut:</span>
             <span data-testid={`text-last-date-${layoff.id}`}>{formatDate(getLastLayoffDate(layoff))}</span>
             {(layoff.layoffHistory?.length ?? 0) > 1 && (
               <>
