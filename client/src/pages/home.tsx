@@ -47,13 +47,14 @@ const LOGO_INITIALS: Record<string, string> = {
   intel: "I", salesforce: "SF", cisco: "C", spotify: "S", unity: "U", tesla: "T",
 };
 
-type SortKey = "danger" | "headcount" | "percentage" | "recent";
+type SortKey = "danger" | "headcount" | "percentage" | "recent" | "rounds";
 
 const SORT_OPTIONS: { value: SortKey; label: string; icon: typeof Skull }[] = [
   { value: "danger", label: "Danger score", icon: Flame },
   { value: "percentage", label: "% workforce cut", icon: Percent },
   { value: "headcount", label: "Total jobs cut", icon: Users },
   { value: "recent", label: "Most recent", icon: TrendingDown },
+  { value: "rounds", label: "Total rounds", icon: Calendar },
 ];
 
 function getDangerScore(l: Layoff): number {
@@ -157,12 +158,12 @@ function LeaderboardRow({ layoff, rank, onClick }: { layoff: Layoff; rank: numbe
                 <span data-testid={`text-pct-${layoff.id}`}>{layoff.percentageCut}%</span>
               </>
             )}
-            <span className="text-border hidden sm:inline">|</span>
-            <span className="hidden sm:inline" data-testid={`text-last-date-${layoff.id}`}>{formatDate(getLastLayoffDate(layoff))}</span>
+            <span className="text-border">|</span>
+            <span data-testid={`text-last-date-${layoff.id}`}>{formatDate(getLastLayoffDate(layoff))}</span>
             {(layoff.layoffHistory?.length ?? 0) > 1 && (
               <>
-                <span className="text-border hidden sm:inline">|</span>
-                <span className="hidden sm:inline text-[10px] text-muted-foreground" data-testid={`text-rounds-${layoff.id}`}>{layoff.layoffHistory!.length} rounds</span>
+                <span className="text-border">|</span>
+                <span className="text-[10px] font-bold text-rose-500/80" data-testid={`text-rounds-${layoff.id}`}>{layoff.layoffHistory!.length} rounds</span>
               </>
             )}
           </div>
@@ -388,6 +389,8 @@ export default function Home() {
         return items.sort((a, b) => (b.percentageCut || 0) - (a.percentageCut || 0));
       case "recent":
         return items.sort((a, b) => new Date(getLastLayoffDate(b)).getTime() - new Date(getLastLayoffDate(a)).getTime());
+      case "rounds":
+        return items.sort((a, b) => (b.layoffHistory?.length || 0) - (a.layoffHistory?.length || 0));
       default:
         return items;
     }
