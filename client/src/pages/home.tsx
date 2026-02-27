@@ -201,8 +201,8 @@ function DetailModal({ layoff, rank, onClose }: { layoff: Layoff; rank: number; 
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-lg w-full rounded-2xl border border-card-border bg-card p-0 gap-0 overflow-hidden animate-in zoom-in-95 fade-in duration-300" data-testid="modal-layoff-detail">
-        <DialogHeader className="p-6 pb-0">
+      <DialogContent className="max-w-lg w-full rounded-2xl border border-card-border bg-card p-0 gap-0 overflow-hidden animate-in zoom-in-95 fade-in duration-300 flex flex-col max-h-[90vh]" data-testid="modal-layoff-detail">
+        <DialogHeader className="p-6 pb-0 flex-shrink-0">
           <div className="flex items-start gap-4">
             <div className="relative">
               <CompanyLogo logo={layoff.logo} company={layoff.company} />
@@ -224,7 +224,7 @@ function DetailModal({ layoff, rank, onClose }: { layoff: Layoff; rank: number; 
           </div>
         </DialogHeader>
 
-        <div className="p-6 pt-5 flex flex-col gap-5">
+        <div className="p-6 pt-5 flex flex-col gap-5 overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40">
           <div className="bg-background rounded-xl p-4 border border-border">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Danger score</span>
