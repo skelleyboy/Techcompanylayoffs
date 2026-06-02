@@ -484,9 +484,14 @@ export default function Home() {
   const [selectedLayoff, setSelectedLayoff] = useState<Layoff | null>(null);
   const [selectedRank, setSelectedRank] = useState(0);
   const [scrolled, setScrolled] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 30);
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 30);
+      setScrollY(y);
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -616,12 +621,17 @@ export default function Home() {
 
         {/* Hero Section */}
         <div className="relative mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both overflow-hidden" data-testid="section-hero">
-          <img
-            src={reaperImg}
-            alt=""
+          <div
             aria-hidden="true"
-            className="absolute -right-8 -top-4 w-64 sm:w-80 opacity-[0.06] dark:opacity-[0.08] pointer-events-none select-none dark:invert"
-          />
+            className="absolute -right-8 -top-4 w-64 sm:w-80 pointer-events-none select-none"
+            style={{ transform: `translateY(${scrollY * 0.18}px)` }}
+          >
+            <img
+              src={reaperImg}
+              alt=""
+              className="w-full h-full opacity-[0.06] dark:opacity-[0.08] dark:invert animate-reaper"
+            />
+          </div>
           <h1 className="relative text-4xl sm:text-5xl font-black tracking-tight text-foreground leading-[1.1] mb-4">
             The companies you<br />
             <span className="text-rose-500 dark:text-rose-400">don't want to work at.</span>
