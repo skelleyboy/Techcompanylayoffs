@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { Sun, Moon, Search, TrendingDown, X, Zap, AlertTriangle, ArrowDown, ArrowUp, Minus, Skull, Flame, Users, Percent, Calendar, Briefcase, ExternalLink, ShieldAlert, ArrowLeft, MessageSquare, Globe } from "lucide-react";
 import logoImg from "@assets/image_1780437429735.png";
+import reaperImg from "@assets/image_1780437460971.png";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -137,9 +138,14 @@ function LeaderboardRow({ layoff, rank, onClick }: { layoff: Layoff; rank: numbe
       style={{ animationDelay: `${Math.min(rank * 30, 600)}ms` }}
     >
       <div className="flex items-center gap-3 sm:gap-4 px-3 sm:px-5 py-3.5 hover-elevate rounded-xl transition-all duration-200 flex-wrap active:scale-[0.98]">
-        <span data-testid={`text-rank-${rank}`} className={`text-lg sm:text-xl font-black tabular-nums w-7 sm:w-8 text-center flex-shrink-0 ${rank <= 3 ? level.color : "text-muted-foreground"}`}>
-          {rank}
-        </span>
+        <div className="relative w-7 sm:w-8 flex-shrink-0 flex justify-center">
+          <span data-testid={`text-rank-${rank}`} className={`text-lg sm:text-xl font-black tabular-nums text-center ${rank <= 3 ? level.color : "text-muted-foreground"}`}>
+            {rank}
+          </span>
+          {score === 100 && (
+            <img src={reaperImg} alt="" aria-hidden="true" className="absolute -top-3 -right-2 w-6 h-6 object-contain opacity-70 dark:invert pointer-events-none" />
+          )}
+        </div>
 
         <CompanyLogo logo={layoff.logo} company={layoff.company} />
 
@@ -609,8 +615,14 @@ export default function Home() {
         </header>
 
         {/* Hero Section */}
-        <div className="mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both" data-testid="section-hero">
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-foreground leading-[1.1] mb-4">
+        <div className="relative mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both overflow-hidden" data-testid="section-hero">
+          <img
+            src={reaperImg}
+            alt=""
+            aria-hidden="true"
+            className="absolute -right-8 -top-4 w-64 sm:w-80 opacity-[0.06] dark:opacity-[0.08] pointer-events-none select-none dark:invert"
+          />
+          <h1 className="relative text-4xl sm:text-5xl font-black tracking-tight text-foreground leading-[1.1] mb-4">
             The companies you<br />
             <span className="text-rose-500 dark:text-rose-400">don't want to work at.</span>
           </h1>
