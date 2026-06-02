@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { Sun, Moon, Search, TrendingDown, X, Zap, AlertTriangle, ArrowDown, ArrowUp, Minus, Skull, Flame, Users, Percent, Calendar, Briefcase, ExternalLink, ShieldAlert, ArrowLeft, MessageSquare, Globe } from "lucide-react";
+import logoImg from "@assets/image_1780437429735.png";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -476,6 +477,13 @@ export default function Home() {
   const [sortBy, setSortBy] = useState<SortKey>("danger");
   const [selectedLayoff, setSelectedLayoff] = useState<Layoff | null>(null);
   const [selectedRank, setSelectedRank] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 30);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const layoffs = LAYOFF_DATA;
   const isLoading = false;
@@ -581,21 +589,20 @@ export default function Home() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
 
         {/* Header */}
-        <header className="flex items-center justify-between gap-3 mb-8 animate-in fade-in slide-in-from-top-4 duration-700">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
-              <Skull className="w-4 h-4 text-background" />
-            </div>
-            <div>
-              <span className="font-bold text-sm tracking-tight block leading-tight" data-testid="text-app-title">Tech Company Layoffs</span>
-            </div>
-          </div>
+        <header className="sticky top-0 z-40 flex items-center justify-between gap-3 mb-8 animate-in fade-in slide-in-from-top-4 duration-700 bg-background/80 backdrop-blur-sm -mx-4 sm:-mx-6 px-4 sm:px-6 py-2">
+          <img
+            src={logoImg}
+            alt="Tech Company Layoffs"
+            data-testid="text-app-title"
+            style={{ height: scrolled ? "50px" : "72px" }}
+            className="transition-all duration-300 ease-in-out object-contain dark:invert"
+          />
           <Button
             data-testid="button-theme-toggle"
             variant="ghost"
             size="icon"
             onClick={toggle}
-            className="rounded-xl"
+            className="rounded-xl flex-shrink-0"
           >
             {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </Button>
