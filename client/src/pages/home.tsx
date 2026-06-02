@@ -139,7 +139,7 @@ function SponsoredSlot() {
       await fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({ "form-name": "advertise", email, company }).toString(),
+        body: new URLSearchParams({ "form-name": "advertise", "bot-field": "", email, company }).toString(),
       });
     } catch {}
     setLoading(false);
@@ -299,6 +299,7 @@ function DetailView({ layoff, rank, onBack }: { layoff: Layoff; rank: number; on
     try {
       const body = new URLSearchParams({
         "form-name": "hiring-alert",
+        "bot-field": "",
         email: alertEmail,
         company: layoff.company,
         companyId: layoff.id,
