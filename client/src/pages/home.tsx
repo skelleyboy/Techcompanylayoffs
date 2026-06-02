@@ -571,18 +571,6 @@ export default function Home() {
   const [sortBy, setSortBy] = useState<SortKey>("danger");
   const [selectedLayoff, setSelectedLayoff] = useState<Layoff | null>(null);
   const [selectedRank, setSelectedRank] = useState(0);
-  const [scrolled, setScrolled] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      setScrolled(y > 30);
-      setScrollY(y);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   const layoffs = LAYOFF_DATA;
   const isLoading = false;
@@ -693,8 +681,8 @@ export default function Home() {
             src={logoImg}
             alt="Tech Company Layoffs"
             data-testid="text-app-title"
-            style={{ height: scrolled ? "50px" : "72px" }}
-            className="transition-all duration-300 ease-in-out object-contain dark:invert"
+            style={{ height: "72px" }}
+            className="object-contain dark:invert"
           />
           <Button
             data-testid="button-theme-toggle"
@@ -712,12 +700,11 @@ export default function Home() {
           <div
             aria-hidden="true"
             className="absolute -right-8 top-0 w-64 sm:w-80 pointer-events-none select-none"
-            style={{ transform: `translateY(${scrollY * 0.18}px)` }}
           >
             <img
               src={reaperImg}
               alt=""
-              className="w-full h-full opacity-[0.06] dark:opacity-[0.08] dark:invert animate-reaper"
+              className="w-full h-full opacity-[0.06] dark:opacity-[0.08] dark:invert"
             />
           </div>
           <h1 className="relative text-5xl sm:text-6xl font-black tracking-wide text-foreground leading-[1.05] mb-4 uppercase" style={{ fontFamily: "'Big Shoulders Display', sans-serif" }}>
