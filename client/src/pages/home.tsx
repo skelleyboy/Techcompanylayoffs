@@ -554,7 +554,7 @@ export default function Home() {
     <div className="min-h-screen bg-background text-foreground">
 
       {/* Top Timeline Ticker */}
-      <div className="w-full overflow-hidden border-b border-border bg-background" data-testid="section-timeline-ticker">
+      <div className="w-full overflow-hidden bg-foreground" data-testid="section-timeline-ticker">
         <div className="flex animate-marquee">
           {tickerEvents.map((ev, i) => {
             const typeColor = ev.type === "2026"
@@ -563,13 +563,13 @@ export default function Home() {
               ? "text-amber-400"
               : "text-rose-400";
             return (
-              <div key={i} className="flex items-center gap-3 px-6 py-2.5 flex-shrink-0 border-r border-border/40">
+              <div key={i} className="flex items-center gap-3 px-6 py-2.5 flex-shrink-0 border-r border-background/10">
                 <span className={`text-[10px] font-black uppercase tracking-widest ${typeColor}`}>
                   {ev.type === "2026" ? "AI" : ev.type === "2022" ? "BLOAT" : "$$"}
                 </span>
-                <span className="text-sm font-bold text-foreground whitespace-nowrap">{ev.company}</span>
-                <span className="text-xs text-muted-foreground whitespace-nowrap">{formatDate(ev.date)}</span>
-                <span className="text-[11px] font-black text-rose-500 whitespace-nowrap tabular-nums">
+                <span className="text-sm font-bold text-background whitespace-nowrap">{ev.company}</span>
+                <span className="text-xs text-background/50 whitespace-nowrap">{formatDate(ev.date)}</span>
+                <span className="text-[11px] font-black text-rose-400 whitespace-nowrap tabular-nums">
                   −{formatNumber(ev.count)}
                 </span>
               </div>
