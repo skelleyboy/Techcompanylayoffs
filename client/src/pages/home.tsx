@@ -570,7 +570,7 @@ export default function Home() {
                 <span className="text-sm font-bold text-background whitespace-nowrap">{ev.company}</span>
                 <span className="text-xs text-background/50 whitespace-nowrap">{formatDate(ev.date)}</span>
                 <span className="text-[11px] font-black text-rose-400 whitespace-nowrap tabular-nums">
-                  −{formatNumber(ev.count)}
+                  {formatNumber(ev.count)}
                 </span>
               </div>
             );
