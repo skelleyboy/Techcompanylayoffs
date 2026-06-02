@@ -699,15 +699,15 @@ export default function Home() {
         <div className="relative mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both" data-testid="section-hero">
           <div
             aria-hidden="true"
-            className="absolute -right-8 top-0 w-[32rem] sm:w-[40rem] pointer-events-none select-none"
+            className="absolute -right-6 sm:-right-8 top-0 w-[16rem] sm:w-[40rem] pointer-events-none select-none"
           >
             <img
               src={reaperImg}
               alt=""
-              className="w-full h-full opacity-[0.06] dark:opacity-[0.08] dark:invert"
+              className="w-full h-full opacity-[0.07] dark:opacity-[0.09] dark:invert"
             />
           </div>
-          <h1 className="relative text-5xl sm:text-6xl font-black tracking-wide text-foreground leading-[1.05] mb-4 uppercase" style={{ fontFamily: "'Big Shoulders Display', sans-serif" }}>
+          <h1 className="relative font-black text-foreground leading-[1.05] mb-4 uppercase" style={{ fontFamily: "'Big Shoulders Display', sans-serif", fontSize: "clamp(2.4rem, 11vw, 3.75rem)" }}>
             The companies you<br />
             <span className="text-violet-600 dark:text-lime-400">don't want to work at.</span>
           </h1>
