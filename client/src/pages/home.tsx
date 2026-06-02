@@ -699,7 +699,7 @@ export default function Home() {
         <div className="relative mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both" data-testid="section-hero">
           <div
             aria-hidden="true"
-            className="absolute -right-8 top-0 w-64 sm:w-80 pointer-events-none select-none"
+            className="absolute -right-8 top-0 w-[32rem] sm:w-[40rem] pointer-events-none select-none"
           >
             <img
               src={reaperImg}
