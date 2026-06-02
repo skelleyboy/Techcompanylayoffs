@@ -475,7 +475,6 @@ export default function Home() {
             </div>
             <div>
               <span className="font-bold text-sm tracking-tight block leading-tight" data-testid="text-app-title">Tech Company Layoffs</span>
-              <span className="text-[10px] text-muted-foreground leading-none">updated daily</span>
             </div>
           </div>
           <Button
@@ -488,6 +487,26 @@ export default function Home() {
             {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </Button>
         </header>
+
+        {/* Hero Section */}
+        <div className="mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both" data-testid="section-hero">
+          <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-foreground leading-[1.1] mb-4">
+            The companies you<br />
+            <span className="text-rose-500 dark:text-rose-400">don't want to work at.</span>
+          </h1>
+          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-lg mb-6">
+            Ranked by danger score. Real layoff data, CEO receipts, and hiring signals — so you can make smarter career moves in a brutal market.
+          </p>
+          <button
+            data-testid="button-cta-view-list"
+            onClick={() => {
+              document.getElementById("leaderboard")?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="inline-flex items-center gap-2 bg-foreground text-background text-xs font-bold uppercase tracking-[0.15em] px-5 py-3 rounded-xl hover:opacity-80 transition-opacity active:scale-[0.97]"
+          >
+            View the list <ArrowDown className="w-3.5 h-3.5" />
+          </button>
+        </div>
 
         {/* Ticker Strip */}
         <div className="flex items-center gap-4 sm:gap-6 mb-8 pb-6 border-b border-border overflow-x-auto animate-in fade-in slide-in-from-left-4 duration-700 delay-150 fill-mode-both" data-testid="section-stats">
@@ -560,7 +579,7 @@ export default function Home() {
         </div>
 
         {/* Column headers */}
-        <div className="flex items-center gap-3 sm:gap-4 px-3 sm:px-5 py-2 text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">
+        <div id="leaderboard" className="flex items-center gap-3 sm:gap-4 px-3 sm:px-5 py-2 text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">
           <span className="w-7 sm:w-8 text-center">#</span>
           <span className="w-10" />
           <span className="flex-1">Company</span>
