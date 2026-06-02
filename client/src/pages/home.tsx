@@ -676,7 +676,7 @@ export default function Home() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
 
         {/* Header */}
-        <header className="sticky top-0 z-40 flex items-center justify-between gap-3 mb-8 animate-in fade-in slide-in-from-top-4 duration-700 bg-background/80 backdrop-blur-sm py-2">
+        <header className="sticky top-0 z-40 flex items-center justify-between gap-3 mb-8 animate-in fade-in slide-in-from-top-4 duration-700 bg-background/80 backdrop-blur-sm py-2 pr-2 sm:pr-0">
           <img
             src={logoImg}
             alt="Tech Company Layoffs"
