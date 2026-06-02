@@ -581,6 +581,46 @@ export default function Home() {
           </button>
         </div>
 
+        {/* Layoff Timeline Ticker */}
+        {(() => {
+          const events = LAYOFF_DATA
+            .flatMap(l =>
+              (l.layoffHistory ?? []).map(r => ({
+                company: l.company,
+                date: r.date,
+                count: r.count,
+                type: l.layoffType,
+              }))
+            )
+            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+          const doubled = [...events, ...events];
+          return (
+            <div className="mb-10 -mx-4 sm:-mx-6 overflow-hidden border-y border-border animate-in fade-in duration-700 delay-200 fill-mode-both" data-testid="section-timeline-ticker">
+              <div className="flex animate-marquee">
+                {doubled.map((ev, i) => {
+                  const typeColor = ev.type === "2026"
+                    ? "text-violet-400"
+                    : ev.type === "2022"
+                    ? "text-amber-400"
+                    : "text-rose-400";
+                  return (
+                    <div key={i} className="flex items-center gap-3 px-6 py-3 flex-shrink-0 border-r border-border/40">
+                      <span className={`text-[10px] font-black uppercase tracking-widest ${typeColor}`}>
+                        {ev.type === "2026" ? "AI" : ev.type === "2022" ? "BLOAT" : "$$"}
+                      </span>
+                      <span className="text-sm font-bold text-foreground whitespace-nowrap">{ev.company}</span>
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">{formatDate(ev.date)}</span>
+                      <span className="text-[11px] font-black text-rose-500 whitespace-nowrap tabular-nums">
+                        −{formatNumber(ev.count)}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Ticker Strip */}
         <div className="flex items-center gap-4 sm:gap-6 mb-8 pb-6 border-b border-border overflow-x-auto animate-in fade-in slide-in-from-left-4 duration-700 delay-150 fill-mode-both" data-testid="section-stats">
           <div className="flex-shrink-0">
