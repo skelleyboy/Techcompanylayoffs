@@ -158,7 +158,7 @@ function SponsoredSlot() {
             <p className="text-sm font-semibold text-foreground">Got it — we'll be in touch.</p>
           ) : (
             <>
-              <p className="text-[11px] font-black uppercase tracking-widest text-lime-500 mb-0.5">Your company here</p>
+              <p className="text-[11px] font-black uppercase tracking-widest text-lime-500 mb-0.5">Your company here · <span className="text-lime-400">$25/mo</span></p>
               <p className="text-xs text-muted-foreground leading-snug">Reach job seekers actively avoiding the competition. <span className="text-foreground font-medium">Sponsor this slot.</span></p>
               <form onSubmit={handleSubmit} className="flex gap-1.5 mt-2 flex-wrap" data-testid="form-advertise">
                 <input type="hidden" name="form-name" value="advertise" />
