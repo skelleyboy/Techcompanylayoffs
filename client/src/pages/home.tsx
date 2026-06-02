@@ -632,7 +632,7 @@ export default function Home() {
               className="w-full h-full opacity-[0.06] dark:opacity-[0.08] dark:invert animate-reaper"
             />
           </div>
-          <h1 className="relative text-4xl sm:text-5xl font-black tracking-tight text-foreground leading-[1.1] mb-4">
+          <h1 className="relative text-5xl sm:text-6xl font-black tracking-wide text-foreground leading-[1.05] mb-4 uppercase" style={{ fontFamily: "'Big Shoulders Display', sans-serif" }}>
             The companies you<br />
             <span className="text-rose-500 dark:text-rose-400">don't want to work at.</span>
           </h1>
