@@ -634,7 +634,7 @@ export default function Home() {
           </div>
           <h1 className="relative text-5xl sm:text-6xl font-black tracking-wide text-foreground leading-[1.05] mb-4 uppercase" style={{ fontFamily: "'Big Shoulders Display', sans-serif" }}>
             The companies you<br />
-            <span className="text-rose-500 dark:text-rose-400">don't want to work at.</span>
+            <span className="text-violet-600 dark:text-lime-400">don't want to work at.</span>
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-lg mb-6">
             Ranked by danger score. Real layoff data, CEO receipts, and hiring signals so you can make smarter career moves in a brutal market.
