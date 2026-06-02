@@ -608,7 +608,7 @@ export default function Home() {
             <span className="text-rose-500 dark:text-rose-400">don't want to work at.</span>
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-lg mb-6">
-            Ranked by danger score. Real layoff data, CEO receipts, and hiring signals — so you can make smarter career moves in a brutal market.
+            Ranked by danger score. Real layoff data, CEO receipts, and hiring signals so you can make smarter career moves in a brutal market.
           </p>
           <button
             data-testid="button-cta-view-list"
