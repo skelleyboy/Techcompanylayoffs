@@ -125,6 +125,79 @@ function StockIndicator({ impact }: { impact?: string | null }) {
   return <Minus className="w-3 h-3 text-muted-foreground" />;
 }
 
+function SponsoredSlot() {
+  const [submitted, setSubmitted] = useState(false);
+  const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setLoading(true);
+    try {
+      await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ "form-name": "advertise", email, company }).toString(),
+      });
+    } catch {}
+    setLoading(false);
+    setSubmitted(true);
+  };
+
+  return (
+    <div className="my-1 mx-0" data-testid="section-sponsored-slot">
+      <div className="rounded-xl border border-lime-500/30 bg-lime-500/5 dark:bg-lime-500/5 px-3 sm:px-5 py-3.5 flex items-center gap-3 sm:gap-4">
+        <span className="text-[10px] font-black uppercase tracking-widest text-lime-500 w-7 sm:w-8 text-center flex-shrink-0">AD</span>
+        <div className="w-10 h-10 rounded-xl bg-lime-500/15 flex items-center justify-center flex-shrink-0">
+          <Briefcase className="w-4 h-4 text-lime-500" />
+        </div>
+        <div className="flex-1 min-w-0">
+          {submitted ? (
+            <p className="text-sm font-semibold text-foreground">Got it — we'll be in touch.</p>
+          ) : (
+            <>
+              <p className="text-[11px] font-black uppercase tracking-widest text-lime-500 mb-0.5">Your company here</p>
+              <p className="text-xs text-muted-foreground leading-snug">Reach job seekers actively avoiding the competition. <span className="text-foreground font-medium">Sponsor this slot.</span></p>
+              <form onSubmit={handleSubmit} className="flex gap-1.5 mt-2 flex-wrap" data-testid="form-advertise">
+                <input type="hidden" name="form-name" value="advertise" />
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="work@yourcompany.com"
+                  data-testid="input-advertise-email"
+                  className="bg-background border border-border text-xs rounded-lg px-3 py-1.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-lime-500 w-44"
+                />
+                <input
+                  type="text"
+                  name="company"
+                  value={company}
+                  onChange={e => setCompany(e.target.value)}
+                  placeholder="Company name"
+                  data-testid="input-advertise-company"
+                  className="bg-background border border-border text-xs rounded-lg px-3 py-1.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-lime-500 w-36"
+                />
+                <button
+                  type="submit"
+                  disabled={loading}
+                  data-testid="button-advertise-submit"
+                  className="bg-lime-500 text-black text-[10px] font-black uppercase tracking-[0.12em] px-4 py-1.5 rounded-lg hover:bg-lime-400 transition-colors disabled:opacity-50"
+                >
+                  {loading ? "..." : "Get rate card"}
+                </button>
+              </form>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function LeaderboardRow({ layoff, rank, onClick }: { layoff: Layoff; rank: number; onClick: () => void }) {
   const score = getDangerScore(layoff);
   const level = getDangerLevel(score);
@@ -224,12 +297,23 @@ function DetailView({ layoff, rank, onBack }: { layoff: Layoff; rank: number; on
     if (!alertEmail) return;
     setAlertState("loading");
     try {
+      const body = new URLSearchParams({
+        "form-name": "hiring-alert",
+        email: alertEmail,
+        company: layoff.company,
+        companyId: layoff.id,
+      });
+      await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString(),
+      });
       if (ENDPOINT) {
         await fetch(ENDPOINT, {
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "application/json" },
           body: JSON.stringify({ email: alertEmail, company: layoff.company, companyId: layoff.id }),
-        });
+        }).catch(() => {});
       }
       localStorage.setItem(STORAGE_KEY, alertEmail);
       setAlertState("done");
@@ -361,9 +445,12 @@ function DetailView({ layoff, rank, onBack }: { layoff: Layoff; rank: number; on
                 Get notified when {layoff.company}'s danger score drops — a signal they're stabilizing and hiring again.
               </p>
               <form onSubmit={handleAlertSubmit} className="flex gap-2" data-testid="form-alert-signup">
+                <input type="hidden" name="form-name" value="hiring-alert" />
+                <input type="hidden" name="bot-field" />
                 <input
                   data-testid="input-alert-email"
                   type="email"
+                  name="email"
                   required
                   value={alertEmail}
                   onChange={(e) => setAlertEmail(e.target.value)}
@@ -743,12 +830,14 @@ export default function Home() {
             </div>
           ) : (
             filtered.map((layoff, i) => (
-              <LeaderboardRow
-                key={layoff.id}
-                layoff={layoff}
-                rank={i + 1}
-                onClick={() => handleSelect(layoff, i + 1)}
-              />
+              <div key={layoff.id}>
+                <LeaderboardRow
+                  layoff={layoff}
+                  rank={i + 1}
+                  onClick={() => handleSelect(layoff, i + 1)}
+                />
+                {i === 4 && <SponsoredSlot />}
+              </div>
             ))
           )}
         </section>
