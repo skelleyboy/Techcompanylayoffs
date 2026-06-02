@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Sun, Moon, Search, TrendingDown, X, Zap, AlertTriangle, ArrowDown, ArrowUp, Minus, Skull, Flame, Users, Percent, Calendar, Briefcase, ExternalLink, ShieldAlert, ArrowLeft, MessageSquare, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -202,6 +202,36 @@ function DetailView({ layoff, rank, onBack }: { layoff: Layoff; rank: number; on
   const level = getDangerLevel(score);
   const typeMeta = TYPE_META[layoff.layoffType];
 
+  const STORAGE_KEY = `alert_${layoff.id}`;
+  const ENDPOINT = import.meta.env.VITE_ALERT_FORM_ENDPOINT as string | undefined;
+
+  const [alertEmail, setAlertEmail] = useState("");
+  const [alertState, setAlertState] = useState<"idle" | "loading" | "done">("idle");
+
+  useEffect(() => {
+    if (localStorage.getItem(STORAGE_KEY)) setAlertState("done");
+  }, [STORAGE_KEY]);
+
+  const handleAlertSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!alertEmail) return;
+    setAlertState("loading");
+    try {
+      if (ENDPOINT) {
+        await fetch(ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({ email: alertEmail, company: layoff.company, companyId: layoff.id }),
+        });
+      }
+      localStorage.setItem(STORAGE_KEY, alertEmail);
+      setAlertState("done");
+    } catch {
+      localStorage.setItem(STORAGE_KEY, alertEmail);
+      setAlertState("done");
+    }
+  };
+
   const handleShare = async () => {
     const shareData = {
       title: `${layoff.company} Layoff Data | Tech Company Layoffs`,
@@ -301,6 +331,49 @@ function DetailView({ layoff, rank, onBack }: { layoff: Layoff; rank: number; on
               Open Job Board <ExternalLink className="w-4 h-4" />
             </a>
           </Button>
+        </div>
+
+        {/* Alert Signup */}
+        <div className="bg-card border border-card-border rounded-2xl p-8 space-y-5">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Hiring Alert</span>
+          </div>
+          {alertState === "done" ? (
+            <div className="flex items-center gap-3 py-4" data-testid="alert-confirmed">
+              <div className="w-8 h-8 rounded-full bg-emerald-500/15 flex items-center justify-center flex-shrink-0">
+                <ArrowUp className="w-4 h-4 text-emerald-500" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-foreground">You're on the list.</p>
+                <p className="text-xs text-muted-foreground mt-0.5">We'll notify you when {layoff.company} starts hiring again.</p>
+              </div>
+            </div>
+          ) : (
+            <>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Get notified when {layoff.company}'s danger score drops — a signal they're stabilizing and hiring again.
+              </p>
+              <form onSubmit={handleAlertSubmit} className="flex gap-2" data-testid="form-alert-signup">
+                <input
+                  data-testid="input-alert-email"
+                  type="email"
+                  required
+                  value={alertEmail}
+                  onChange={(e) => setAlertEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  className="flex-1 bg-background border border-border text-sm rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                />
+                <button
+                  data-testid="button-alert-submit"
+                  type="submit"
+                  disabled={alertState === "loading"}
+                  className="bg-foreground text-background text-[11px] font-bold uppercase tracking-[0.15em] px-5 py-3 rounded-xl hover:opacity-80 transition-opacity disabled:opacity-50 flex-shrink-0"
+                >
+                  {alertState === "loading" ? "..." : "Notify me"}
+                </button>
+              </form>
+            </>
+          )}
         </div>
 
         {/* Core Stats Grid */}
